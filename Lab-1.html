@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Mena Whalen" />
+<meta name="author" content="Put Your Name Here" />
 
 
 <title>Lab 1</title>
@@ -350,7 +350,7 @@ display: none;
 
 
 <h1 class="title toc-ignore">Lab 1</h1>
-<h4 class="author">Mena Whalen</h4>
+<h4 class="author">Put Your Name Here</h4>
 <h4 class="date">Due: 09-10-2023</h4>
 
 </div>
@@ -577,8 +577,9 @@ R and Rstudio.</p>
 <li>.R - an R script</li>
 <li>.Rmd - an RMarkdown script - incorporates code and texts together to
 <em>knit</em> a document together. Knitting an rmd file compiles the
-text and code together to create another file such as an .html or
-.pdf</li>
+text and code together to create another file such as an .html or .pdf
+This file is an Rmd file and a code chunk is created with a shortcut
+Ctrl + Alt + I (Windows/Linux) or Cmd + Option + I (macOS).</li>
 <li>.Rproj - an R Project file which works with Rstudio to help you
 organize your different coding projects. The working directory will
 automatically be set to the directory that the .RProj file is located in
@@ -835,6 +836,114 @@ df</code></pre>
 ##  1  1  1  1  1  1  1  1  1  1</code></pre>
 </div>
 </div>
+</div>
+<div id="git-and-github" class="section level2">
+<h2>Git and Github</h2>
+<div id="git" class="section level3">
+<h3>Git</h3>
+<p>Git is a version control system that helps you keep track of changes
+in your code or any other files. It’s like a time machine for your work.
+Git allows you to:</p>
+<ul>
+<li><p>Track Changes: You can record every change you make to your
+files. This includes adding new files, editing existing ones, and
+deleting files.</p></li>
+<li><p>Collaborate with Others: Git is designed for collaboration.
+Multiple people can work on the same project simultaneously, and Git
+helps to manage changes and merge them seamlessly (ish).</p></li>
+<li><p>Create Backups: Git acts as a backup system. If something goes
+wrong, you can easily restore your project to a previous state.</p></li>
+<li><p>Work Offline: You don’t need an internet connection to use Git.
+You can commit changes to your local repository, and when you’re online,
+you can sync those changes with a remote repository (like
+GitHub).</p></li>
+</ul>
+</div>
+<div id="github" class="section level3">
+<h3>GitHub</h3>
+<p>GitHub is a web-based platform that uses Git for version control.
+It’s like a social network for programmers and a hosting platform for
+Git repositories. Here’s what you can do with GitHub:</p>
+<ul>
+<li>Store Code in the Cloud: You can store your Git repositories online.
+This is particularly useful because it acts as a backup, and you can
+access your code from anywhere.</li>
+</ul>
+<p>Collaborate with Others: GitHub is an excellent platform for team
+collaboration. You can invite team members to your project, and everyone
+can work on the same codebase. This is what we will be using for our
+class to acess notes and labs.</p>
+<ul>
+<li><p>Share Your Work: GitHub allows you to share your code with the
+world. You can make your repositories public so that anyone can see your
+code and contribute to it, or you can keep them private for restricted
+access.</p></li>
+<li><p>Issue Tracking: GitHub provides tools for issue tracking and
+project management. You can use it to keep track of tasks, bugs, and
+feature requests.</p></li>
+</ul>
+<p>Install Git: Install Git on your computer. Git can be downloaded from
+the <a href="https://git-scm.com/downloads">official website</a>.</p>
+<p>Set Up Git: Open a terminal (or Git Bash on Windows), note that the
+terminal is present in the console, and configure Git with their name
+and email address using the following commands:</p>
+<pre><code>git config --global user.name &quot;Your Name&quot;
+git config --global user.email &quot;youremail@example.com&quot;</code></pre>
+<hr />
+</div>
+</div>
+<div id="on-your-own.." class="section level2">
+<h2>On your own..</h2>
+<ol style="list-style-type: decimal">
+<li>I want you to connect your Rstudio to the class Github page <a href="https://github.com/menawhalen/STAT_401">https://github.com/menawhalen/STAT_401</a>.</li>
+</ol>
+<ul>
+<li><p>Clone the Repository: In RStudio, go to “File” &gt; “New Project”
+&gt; “Version Control” &gt; “Git.” Paste the URL of your GitHub
+repository (<a href="https://github.com/menawhalen/STAT_401" class="uri">https://github.com/menawhalen/STAT_401</a>) and choose a
+directory to clone it into. This directory will be on your computer
+locally so organize it accordingly.</p></li>
+<li><p>Pull the Latest Changes: Before working on any labs, pull in the
+terminal to get the latest version of the repository. The pull is the
+green arrow under the Git tab. You will not be committing or pulling to
+this class. Just <em>pull</em>.</p></li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Create a numeric vector containing the values 5, 10, 15, 20, and
+25. Calculate the mean of this vector and assign it to a variable called
+<code>mean_value</code>. Print the <code>mean_value</code></p></li>
+<li><p>Create a data frame with the following information about three of
+your friends:</p></li>
+</ol>
+<ul>
+<li>Name (character)</li>
+<li>Age (numeric)</li>
+<li>Favorite Color (character)</li>
+</ul>
+<p>Make sure to include at least three rows of data. Print the entire
+data frame. Name it whatever you like.</p>
+<ol start="4" style="list-style-type: decimal">
+<li>Create two numeric vectors: <code>vector1</code> with values 1, 2,
+3, and <code>vector2</code> with values 4, 5, 6. Perform the following
+operations:</li>
+</ol>
+<ul>
+<li>Add <code>vector1</code> and <code>vector2</code> and store the
+result in a new vector called <code>sum_vector.</code></li>
+<li>Subtract <code>vector2</code> from <code>vector1</code> and store
+the result in a new vector called <code>diff_vector.</code></li>
+<li>Multiply <code>vector1</code> and <code>vector2</code> element-wise
+and store the result in a new vector called
+<code>prod_vector.</code></li>
+<li>Divide <code>vector1</code> by <code>vector2</code> element-wise and
+store the result in a new vector called <code>quot_vector.</code></li>
+</ul>
+<p>Print all four result vectors.</p>
+<ol start="5" style="list-style-type: decimal">
+<li>Knit this document and submit the Rmd file and the html version to
+Sakai under Lab 1. Both Rmd and html files need to be submitted to be
+graded.</li>
+</ol>
 </div>
 
 

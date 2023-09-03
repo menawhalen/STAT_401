@@ -1,6 +1,6 @@
 ---
 title: "Lab 1"
-author: "Mena Whalen"
+author: "Put Your Name Here"
 date: "Due: 09-10-2023"
 output: html_document
 ---
@@ -125,7 +125,7 @@ There are many types of files that you will interact with when using R and Rstud
 
 1. R Files
 * .R - an R script
-* .Rmd - an RMarkdown script - incorporates code and texts together to *knit* a document together. Knitting an rmd file compiles the text and code together to create another file such as an .html or .pdf
+* .Rmd - an RMarkdown script - incorporates code and texts together to *knit* a document together. Knitting an rmd file compiles the text and code together to create another file such as an .html or .pdf This file is an Rmd file and a code chunk is created with a shortcut Ctrl + Alt + I (Windows/Linux) or Cmd + Option + I (macOS). 
 * .Rproj - an R Project file which works with Rstudio to help you organize your different coding projects. The working directory will automatically be set to the directory that the .RProj file is located in allowing easier organization and access to your data and files.
 2. Data Files
 * .csv - comma seperated values file
@@ -352,8 +352,78 @@ summary(df)
 table(df$V3)
 ```
 
+## Git and Github
+
+### Git
+Git is a version control system that helps you keep track of changes in your code or any other files. It's like a time machine for your work. Git allows you to:
+
+* Track Changes: You can record every change you make to your files. This includes adding new files, editing existing ones, and deleting files.
+
+* Collaborate with Others: Git is designed for collaboration. Multiple people can work on the same project simultaneously, and Git helps to manage changes and merge them seamlessly (ish).
+
+* Create Backups: Git acts as a backup system. If something goes wrong, you can easily restore your project to a previous state.
+
+* Work Offline: You don't need an internet connection to use Git. You can commit changes to your local repository, and when you're online, you can sync those changes with a remote repository (like GitHub).
+
+### GitHub
+GitHub is a web-based platform that uses Git for version control. It's like a social network for programmers and a hosting platform for Git repositories. Here's what you can do with GitHub:
+
+* Store Code in the Cloud: You can store your Git repositories online. This is particularly useful because it acts as a backup, and you can access your code from anywhere.
+
+Collaborate with Others: GitHub is an excellent platform for team collaboration. You can invite team members to your project, and everyone can work on the same codebase. This is what we will be using for our class to acess notes and labs.
+
+* Share Your Work: GitHub allows you to share your code with the world. You can make your repositories public so that anyone can see your code and contribute to it, or you can keep them private for restricted access.
+
+* Issue Tracking: GitHub provides tools for issue tracking and project management. You can use it to keep track of tasks, bugs, and feature requests.
+
+
+Install Git: Install Git on your computer. Git can be downloaded from the [official website](https://git-scm.com/downloads).
+
+Set Up Git: Open a terminal (or Git Bash on Windows), note that the terminal is present in the console, and configure Git with their name and email address using the following commands:
+
+    git config --global user.name "Your Name"
+    git config --global user.email "youremail@example.com"
+    
 
 ____________________________________________________________________
 ## On your own..
 
-1. 
+1. I want you to connect your Rstudio to the class Github page [https://github.com/menawhalen/STAT_401](https://github.com/menawhalen/STAT_401).
+
+* Clone the Repository: In RStudio, go to "File" > "New Project" > "Version Control" > "Git." Paste the URL of your GitHub repository (https://github.com/menawhalen/STAT_401) and choose a directory to clone it into. This directory will be on your computer locally so organize it accordingly.
+
+* Pull the Latest Changes: Before working on any labs, pull in the terminal to get the latest version of the repository. The pull is the green arrow under the Git tab. You will not be committing or pulling to this class. Just *pull*.
+
+2. Create a numeric vector containing the values 5, 10, 15, 20, and 25. Calculate the mean of this vector and assign it to a variable called `mean_value`. Print the `mean_value`
+
+```{r ex2}
+
+```
+
+
+3. Create a data frame with the following information about three of your friends:
+
+* Name (character)
+* Age (numeric)
+* Favorite Color (character)
+
+Make sure to include at least three rows of data. Print the entire data frame. Name it whatever you like.
+
+```{r ex3}
+
+```
+
+4. Create two numeric vectors: `vector1` with values 1, 2, 3, and `vector2` with values 4, 5, 6. Perform the following operations:
+
+* Add `vector1` and `vector2` and store the result in a new vector called `sum_vector.`
+* Subtract `vector2` from `vector1` and store the result in a new vector called `diff_vector.`
+* Multiply `vector1` and `vector2` element-wise and store the result in a new vector called `prod_vector.`
+* Divide `vector1` by `vector2` element-wise and store the result in a new vector called `quot_vector.`
+
+Print all four result vectors.
+
+```{r ex4}
+
+```
+
+5. Knit this document and submit the Rmd file and the html version to Sakai under Lab 1. Both Rmd and html files need to be submitted to be graded.
