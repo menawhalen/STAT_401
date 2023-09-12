@@ -1,0 +1,561 @@
+---
+title: "Lab 2"
+author: "Put Your Name Here"
+date: "Due: 09-24-2023"
+output: html_document
+---
+
+## File Pathways
+
+Computers are not as smart as you think and you have to tell it exactly what you want it to do and exactly where to look for things.
+
+A file pathway is like a roadmap that guides R to locate your data files on your computer. It's similar to giving directions to someone using street names and landmarks. There are two main types of file pathways:
+
+* Absolute Pathway: This is the complete pathway starting from the root directory of your computer. It's like giving GPS coordinates for a location.
+
+Example: "C:/Users/YourUsername/Documents/data/file.csv"
+
+* Relative Pathway: This is the pathway relative to the current *working directory* in R. It's like giving directions based on your current location.
+
+Example: "data/file.csv"
+
+### Working Directory 
+
+The working directory is the location on your computer where R is currently operating. When you read or write files, R will look for them in this directory by default. This makes it important to set your working directory to the right location, especially when working with data files.
+
+You can use the `getwd()` function to check your current working directory, and the `setwd()` function to set a new working directory.
+
+    # Check the current working directory
+    getwd()
+    
+    # Set a new working directory
+    setwd("path/to/your/new/directory")
+
+### Organizing Data:
+
+It's a good practice to organize your data in a separate folder within your R project. This keeps things tidy and helps avoid confusion.
+
+* Working in Projects: When you are working in a project the working directory is set for you where the project is located on your computer.
+
+* Create a Data Folder: In your R project directory, create a folder named "data" to store your datasets.
+
+* Place Data Files: Put your dataset files (CSV, Excel, etc.) inside the "data" folder.
+
+## readr
+The readr package in the tidyverse provides functions to easily read data files into R. Let's see how to use it to import CSV and Excel files:
+
+Importing CSV Files:
+```
+ # Use read_csv to import a CSV file
+    file_path <- "data/file.csv"  # Specify the relative pathway
+    data <- read_csv(file_path)
+    read_csv("data/file.csv")
+```    
+Importing Excel Files (XLSX):
+
+```    
+    # Use read_xlsx to import an Excel file
+    file_path <- "data/file.xlsx"  # Specify the relative pathway
+    data <- read_xlsx(file_path)
+```
+### Checking Imported Data:
+
+After importing the data, it's a good idea to examine it using functions like `glimpse()`, `slice()`, or `str()`.
+
+```
+    # Display the first few rows
+    slice(data, 1:5)
+    
+    # Get summary of the variables
+    glimpse(data)
+    
+    # Display the structure of the data
+    str(data)
+```
+
+## Tidyverse
+
+The tidyverse is a collection of R packages designed to facilitate data manipulation, exploration, visualization, and modeling. It's built around the idea of making data analysis in R more intuitive and efficient by providing a consistent and coherent framework. The tidyverse packages work seamlessly together and share a common underlying philosophy known as the "tidy data" principles.
+
+Key components of the tidyverse include:
+
+1. `dplyr`: This package provides a grammar of data manipulation. It offers a set of functions that allow you to perform common data manipulation tasks, such as filtering, selecting, arranging, and summarizing data. The syntax of dplyr is designed to be intuitive and readable.
+
+2. `tidyr`: The tidyr package helps you reshape and tidy your data. It provides functions to pivot, gather, and spread data, making it easier to convert data between wide and long formats.
+
+3. `ggplot2`: This package is a powerful tool for creating complex and customized visualizations. It follows the "Grammar of Graphics" concept, which allows you to build plots layer by layer using intuitive functions.
+
+4. `readr`: readr offers fast and flexible tools for reading and writing rectangular data, like CSV files. It aims to improve data import efficiency and handle common issues such as missing values and data types.
+
+5. `purrr`: purrr provides functions to work with and manipulate data in a functional programming style. It's particularly useful for working with lists and performing operations on multiple elements simultaneously.
+
+6. `tibble`: tibble is an enhanced data frame that provides better printing and handling of metadata. It's designed to work seamlessly with the other tidyverse packages.
+
+7. `stringr`: stringr focuses on string manipulation. It provides functions for working with character data, like finding, extracting, and modifying substrings.
+
+8. `forcats`: forcats is designed for working with categorical data, providing tools for managing and modifying factor levels effectively.
+
+The tidyverse promotes the concept of ["tidy data"](https://tidyr.tidyverse.org/articles/tidy-data.html) which follows *a structured format where each variable forms a column, each observation forms a row, and each type of observational unit forms a table*. This approach enhances the consistency and clarity of data analysis workflows.
+
+### Why the Tidyverse
+
+We fill focus on these different packages within the tidyverse throughout the course. This of the tidyverse as a "philosophy" of data science. The tidyverse is beneficial to use for
+
+1. Structured Workflow: The tidyverse provides a consistent and intuitive grammar for data manipulation and visualization. This makes code more readable and understandable, enhancing collaboration and making it easier to return to code after time has passed.
+
+2. Efficiency and Readability: Tidyverse functions are optimized for performance, speeding up data manipulation tasks. The `%>%` (called pipe) operator simplifies code by enabling easy chaining of operations, resulting in a more linear and readable structure.
+
+3. Integrated Tools and Community: Tidyverse packages work seamlessly together, offering integrated tools for data analysis and visualization. With an active and supportive community, learning and troubleshooting are more accessible through a wealth of tutorials and resources.
+
+### Install the Tidyverse
+
+You must first start by installing the tidyverse package. If you do not already have it installed you will get an error message from running this code.
+
+```{r install-tidy}
+library(tidyverse)
+```
+
+
+## dplyr
+
+The `dplyr` package is a fundamental component of the tidyverse that provides a powerful and efficient toolkit for data manipulation in R. It's designed to simplify the process of transforming and summarizing data, making complex operations easier to express and understand. Here's an overview of the key features and functions of the `dplyr` package:
+
+1. Data Transformation:
+
+* `select()`: This function is used to select columns from a data frame based on their names.
+
+* `filter()`: It's used to filter rows based on specified conditions.
+
+* `mutate()`: This function adds new columns or modifies existing ones, creating a transformed version of the data.
+
+
+2. Data Summarization:
+
+* `group_by()`: This function is used to group data by one or more variables.
+
+* `summarize()`: It's used in combination with group_by() to compute summary statistics for each group.
+
+3. Data Aggregation:
+
+* `arrange()`: This function orders rows based on specified variables, allowing ascending or descending order.
+
+* `count()`: It's used to count the occurrences of unique combinations of variables.
+
+4. Pipelining (`%>%` Operator):
+
+One of the defining features of dplyr is its compatibility with the pipe operator `%>%`. This allows you to chain together multiple operations, improving code readability and making it easier to follow the flow of transformations.
+
+By using the pipe operator, you can write code that reads almost like a sentence, with each step of data manipulation flowing into the next. This makes it easier to follow the progression of transformations and reduces the need for intermediate variables. The end result is more concise, readable, and expressive code.
+
+```{r pipe, eval=FALSE}
+# Without piping
+filtered_data <- filter(data, age > 25)
+summarized_data <- summarize(filtered_data, avg_income = mean(income))
+
+# With piping
+library(dplyr)
+data %>%
+  filter(age > 25) %>%
+  summarize(avg_income = mean(income))
+
+```
+
+As shown in the example, the pipe operator takes the output from one step and passes it as the input to the next step. This creates a natural flow that reflects the logical order of the operations being performed.
+
+
+Here is the [dplyr cheatsheet](https://github.com/rstudio/cheatsheets/blob/main/data-transformation.pdf) to reference for which functions to use when with examples.
+
+## Data Transformation
+### select()
+> When working with select think about selecting COLUMNS
+
+There are different ways to use `select()`
+
+1. Choose specific column name from the data frame
+```
+    # Select columns "age" and "income"
+    selected_data <- select(data, age, income)
+```
+2. Select Columns by Name Patterns:
+You can use special helper functions like `starts_with()`, `ends_with()`, `contains()`, `matches()`, and `everything()` to select columns based on their names.
+```
+    # Select columns that start with "var"
+    selected_vars <- select(data, starts_with("var"))
+    # Select columns that contain "total" in their names
+    total_columns <- select(data, contains("total"))
+```
+3. Exclude Columns:
+To exclude specific columns, you can use the `-` (minus) sign before the column name.
+```
+    # Exclude columns "gender" and "zipcode"
+    filtered_data <- select(data, -gender, -zipcode)
+```
+4. Select Columns by Index and Range:
+Using the : operator, you can select columns within a range of indices based on their index positions.
+```
+    # Select columns 4 to 6
+    range_columns <- select(data, 4:6)
+```
+#### Practice with `CIACountries`
+
+We will load the `library(mdsr)` (might have to install) which comes from *Modern Data Science with R* book and houses the data set `CIACountries`
+
+**CIA Countries Description**: The CIA Factbook has geographic, demographic, and economic data on a country-by-country basis. In the description of the variables, the 4-digit number indicates the code used to specify that variable on the data and documentation website.
+
+
+```{r cia, results='hide'}
+library(mdsr)
+## glimpse function in the tidyverse to explore the dataset
+CIACountries %>% 
+  glimpse()
+
+#Subset of columns
+select(CIACountries, country, pop, gdp)
+
+#I can also do it like this
+CIACountries %>% 
+  select(country, pop, gdp)
+
+```
+
+
+```{r select-ex, eval=FALSE}
+CIACountries %>% 
+  select()
+```
+
+
+
+### filter()
+> When filtering think about filtering ROWS
+
+Filter uses Boolean logic so you must enter conditions that are either `TRUE` of a variable(s) or `FALSE`.
+
+Ways to filer..
+
+1. Simple Conditions - greater than (`>`), less than (`<`), or equal to (`==`)
+```
+    # Select rows where "age" is greater than 30
+    filtered_data <- filter(data, age > 30)
+    
+    # Select rows with "female" in the "gender" column
+    female_data <- filter(data, gender == "female")
+```
+> Must use == when filtering since it is asking about Boolean logic
+> Must be exact matches when characters (spelling/uppercase/lowercase/etc.)
+
+2. Multiple Conditions - You can combine conditions using logical operators like `&` (AND) and `|` (OR).
+```
+    # Select rows where "age" is greater than 30 and "income" is less than 50000
+    filtered_data <- filter(data, age > 30 & income < 50000)
+```
+3. Exclusion - to exclude certain rows, you can use the `!=` operator (not equal to).
+```
+    # Exclude rows with "zipcode" equal to 12345
+    filtered_data <- filter(data, zipcode != 12345)
+```
+4. Filter rows based on vector of conditions - The `%in%` operator is useful for filtering rows with values in a specified vector.
+```
+    # Select rows where "gender" is either "male" or "female"
+    gender_data <- filter(data, gender %in% c("male", "female"))
+```
+#### Practice with CIACountries
+
+```{r filter_cia, results='hide'}
+#Subset of rows
+filter(CIACountries, pop > 1000000000)
+
+#I can also do it like this
+CIACountries %>% 
+  filter(pop > 1e9)
+# using both together
+CIACountries %>% 
+  select(country, pop, gdp) %>% 
+  filter(pop > 1e9)
+```
+
+
+Try using filter and select together. 
+
+```{r filter_ex, eval=FALSE}
+CIACountries %>% 
+  filter()
+```
+
+### mutate()
+
+There are multiple ways to use the `mutate()` function when creating a new variable depending on what you want to do with the new variable using variables already existing in the dataset.
+
+```{r mutate1, eval=FALSE}
+# Add a new variable "bmi" calculated from "weight" and "height"
+new_data <- data %>%
+  mutate(bmi = weight / (height * height))
+# Modify the "income" variable by multiplying it with 1.1
+updated_income <- data %>%
+  mutate(income = income * 1.1)
+```
+
+We can use other functions within mutate to help us make the new variable like `ifelse()`. If you have multiple condition you can use the `case_when()` function and list out your possible options.
+
+Basic syntax is
+
+```
+    case_when(
+      condition_1 ~ value_1,
+      condition_2 ~ value_2,
+      ...,
+      TRUE ~ default_value
+    )
+```
+* condition_1, condition_2, etc.: These are logical expressions that define conditions to be evaluated. If a condition is TRUE, the corresponding value will be assigned.
+
+* value_1, value_2, etc.: These are the values to be assigned if the corresponding condition is met.
+
+* TRUE ~ default_value: This is optional. If none of the preceding conditions are met, the default_value will be assigned.
+
+```
+# Create a new variable "status" based on "age"
+new_data <- data %>%
+  mutate(status = ifelse(age > 30, "Older", "Younger"))
+
+# Create a new variable "group" based on "age"
+new_data <- data %>%
+  mutate(group = case_when(
+    age < 30 ~ "Young",
+    age >= 30 & age <= 50 ~ "Middle-aged",
+    age > 50 ~ "Old"
+  ))
+```
+
+
+#### Practice with CIACountries
+
+```{r mutate_cia}
+#Mutate
+#Population Density
+my_CIACountries <- mutate(CIACountries, dens = pop/area)
+my_CIACountries[1,]
+
+my_CIACountries <- CIACountries %>% 
+  mutate(dens = pop/area)
+my_CIACountries[1,]
+```
+
+
+
+```{r mutate_ex, eval=FALSE}
+CIACountries %>% 
+  mutate()
+```
+
+## Data Summary
+
+Using `group_by()` and `summarize()` together allows you to efficiently compute summary statistics, aggregations, or any other computations of data based on different groups defined by one or more variables.
+
+### group_by()
+
+The group_by() function is used to group a data frame by one or more variables. This creates a "grouped" data frame where subsequent operations are performed within each group separately. This works best with categorical variables or factor variables.
+
+```
+    # Group data by "category"
+    grouped_data <- data %>%
+      group_by(category)
+```
+
+This does not really change the look of the data on its own but returns the dataset with now grouped variables.
+
+### summarise()
+
+The `summarise()` function is used to compute summary statistics or other values for each group. It condenses the grouped data into a single row per group, summarizing the specified variables.
+
+```
+    # Compute mean and median of "value" for each group
+    summary_results <- grouped_data %>%
+      summarise(mean_value = mean(value),
+                median_value = median(value))
+``` 
+
+Combining `group_by()` and `summarise()` allows you to compute summary statistics or perform calculations on subsets of your data based on grouping variables.
+
+```{r groupby_sum}
+# Sample data frame
+data <- data.frame(category = c("A", "B", "A", "B", "A"),
+                   value = c(10, 20, 15, 25, 30))
+
+# Group by "category" and compute mean and median of "value"
+summary_data <- data %>%
+  group_by(category) %>%
+  summarise(mean_value = mean(value),
+            median_value = median(value))
+```
+
+#### Practice with CIACountries
+
+```{r summarize_cia, results='hide'}
+#What is the average area by high vs low education countries?
+my_CIACountries <- CIACountries %>% 
+  mutate(high_educ = educ > 4.5) %>% 
+  group_by(high_educ) %>% 
+  summarise(mn_area = mean(area))
+
+my_CIACountries
+
+```
+
+
+Create a new categorical variable (using `case_when()`) to use `group_by()` and `summarise()`
+
+```{r summarise_ex, eval = FALSE}
+CIACountries %>% 
+  mutate(new_variable = case_when(
+    
+  )) %>% 
+  group_by(new_variable) %>% 
+  summarise()
+```
+
+
+## Data Aggregation 
+### arrange() and count()
+
+The `arrange()` function is used to reorder the rows of a data frame based on one or more variables. Depending on the type of variable (integer, character, etc.) depends on how the variables is arranged.
+
+The default order is from largest to smallest (or alphabetical for strings). To change the order from smallest to largest use `desc()`
+
+Unlike other `dplyr` verbs, `arrange()` largely ignores grouping; you need to explicitly mention grouping variables (or use `.by_group = TRUE`) in order to group by them, and functions of variables are evaluated once per data frame, not once per group.
+
+The `count()` function is used to count the occurrences of unique values in a variable. You can also combine these functions to sort the data by a count of occurrences.
+
+```{r arrange, results='hide'}
+# Sample data frame
+data <- data.frame(category = c("A", "B", "A", "B", "A"),
+                   age = c(25, 30, 35, 40, 45))
+
+# Arrange data by "age" in descending order
+data %>%
+  arrange(desc(age))
+
+# Count the occurrences of each "category"
+data %>%
+  count(category)
+
+# Arrange data by the count of each "category" in ascending order
+data %>%
+  count(category) %>%
+  arrange(n)
+```
+
+### Practice CIA Countries 
+
+```{r arrange_cia}
+#Defaults to ascending
+CIACountries %>% 
+  arrange(gdp) %>% 
+  head(5)
+#Sort descending
+CIACountries %>% 
+  arrange(desc(gdp)) %>% 
+  head(5)
+
+```
+
+____________________________________________________________________
+## On your own..
+
+1. Using the `top_colleges_2022` dataset answer the following questions.
+
+a) Read in the csv file and name the variable `college`. This should be simple if question 1 has been completed as the github will download the data folder.
+
+```{r ex1a}
+
+```
+
+b) How many colleges in this data set are in Illinois.
+
+```{r ex1b}
+
+```
+
+c) Find the undergraduate student population of LUC. How man colleges (in this dataset) have a larger undergraduate student population than LUC?
+
+```{r ex1c}
+
+```
+
+2. Using the `cubs_all_time` dataset found in the data folder. Answer the following questions using R:
+
+a) How many total games have the Cubs won and lost between 1876 and 2022?
+
+```{r ex2a}
+
+
+```
+
+b) What year did the Cubs score the most runs? What year did the Cubs score the fewest runs? Do you have any thoughts about the year that the Cubs scored the fewest runs?
+
+```{r ex2b}
+
+```
+
+c) In how many seasons was the Cubs total attendance (i.e. the variable Attendance) over 3 million?
+
+```{r ex2c}
+
+```
+
+d) In the years between 1982 and 2000 (inclusive), what was the greatest ratio of runs for (R) to runs against (RA) in a single season?
+
+```{r ex2d}
+
+```
+
+3. Using the Teams data frame in the Lahman package:
+
+```
+#install.packages("Lahman")
+#The data is in this package
+library(Lahman)
+#The data set is called "Teams".
+#Load this package and the data will automatically be loaded.
+## data("Teams") will put it in your environment
+#Use help(Teams) to get a description of the data
+```
+
+a)  Create a data frame that is a subset of the Teams data frame that contains only the years from 2000 through 2009 and the variables yearID, W, and L.
+
+```{r ex3a}
+
+```
+
+
+b) How many years did the Chicago Cubs (teamID is "CHN") hit at least 200 HRs in a season and what was the median number of wins in those seasons.
+
+```{r ex3b}
+
+```
+
+4. Using `flights` dataset from `nycflights13` 
+
+```
+library(nycflights13)
+#The data set is called "flights".
+#Load this package and the data will automatically be loaded.
+# data("flights") will put it in your environment
+#Use help(flights) to get a description of the data
+```
+
+Use the nycflights13 package and the flights data frame to answer the following questions (you can ignore missing values):
+
+a) What month had the highest average time of delayed flights? Is there a difference between using departure delay versus arrival delay?
+
+```{r ex4a}
+
+```
+
+b) Which airport has the highest proportion of delayed flights leaving? Which airport has the highest proportion of flight arriving late?
+
+```{r ex4b}
+
+```
+
+
