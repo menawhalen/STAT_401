@@ -1,0 +1,166 @@
+---
+title: "Lab 8"
+author: "Your Name Here"
+date: "2023-11-17"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Regression
+
+## Model Building and Analysis
+
+The overarching goal is to move from implicit knowledge in the data to explicit knowledge in a quantitative model. This facilitates a deeper understanding of the data, aids in predictions, and enhances the applicability of the model to new domains.
+
+### Partitioning Data: Patterns and Residuals
+A model can be conceptualized as partitioning data into patterns and residuals. Visualizations help identify patterns, which are then made precise with a model. This process iterates, replacing the original response variable with the residuals from the model. This transition from implicit knowledge to explicit models enhances generalizability and usability.
+
+### Exploring Diamond Pricing
+
+#### Identifying Patterns
+An initial observation indicates a surprising relationship between the quality of diamonds and their price. Lower quality diamonds exhibit higher prices.
+```{r}
+library(tidyverse)
+ggplot(diamonds, aes(cut, price)) + geom_boxplot()
+ggplot(diamonds, aes(color, price)) + geom_boxplot()
+ggplot(diamonds, aes(clarity, price)) + geom_boxplot()
+
+```
+
+#### Addressing Confounding Variables
+It looks like lower quality diamonds have higher prices because there is an important confounding variable: the weight (carat) of the diamond. The weight of the diamond is the single most important factor for determining the price of the diamond, and lower quality diamonds tend to be larger.
+
+1. Focus on diamonds smaller than 2.5 carats (99.7% of the data)
+2. Log-transform the carat and price variables.
+
+```{r}
+
+diamonds2 <- diamonds %>% 
+  filter(carat <= 2.5) %>% 
+  mutate(lprice = log2(price), lcarat = log2(carat))
+
+ggplot(diamonds2, aes(lcarat, lprice)) + geom_hex(bins = 50)
+mod_diamond <- lm(lprice ~ lcarat, data = diamonds2)
+broom::tidy(mod_diamond)
+```
+
+#### Incorporating Categorical Variables
+A more complex model includes additional predictors like color, cut, and clarity, providing a comprehensive understanding of their effects.
+
+```{r}
+mod_diamond2 <- lm(lprice ~ lcarat + color + cut + clarity, data = diamonds2)
+broom::tidy(mod_diamond2)
+```
+
+*** 
+On your Own..
+
+1. Exploring Residuals: Extract diamonds with very high and very low residuals. Investigate if there's anything unusual about these diamonds. Are they indicative of pricing errors or other factors?
+
+2. Model Evaluation: Evaluate the final model, mod_diamond2. Does it effectively predict diamond prices? Discuss the reliability of the model in real-world scenarios.
+*** 
+## Many Models
+
+### Fundamentals 
+
+1. **Using Many Simple Models**: Employing a multitude of simple models aids in comprehending intricate datasets.
+2. **List-Columns**: Leveraging list-columns to store diverse data structures within a data frame, such as a column containing linear models.
+3. **Broom Package**: Utilizing the broom package by David Robinson to convert models into tidy data, enabling the application of various analysis techniques.
+
+### gapminder
+
+The gapminder data summarises the progression of countries over time, looking at statistics like life expectancy and GDP. Let's focusaddressing: "How does life expectancy change over time for each country?" Initial plots are hard to interpret due to the dataset's size. To address this, linear models are fitted to each country to identify trends.
+
+```{r}
+library(modelr)
+library(gapminder)
+gapminder
+
+gapminder %>% 
+  ggplot(aes(year, lifeExp, group = country)) +
+    geom_line(alpha = 1/3)
+
+# Example with New Zealand
+nz <- filter(gapminder, country == "New Zealand")
+nz_mod <- lm(lifeExp ~ year, data = nz)
+## can't look at all countries
+```
+
+### Nested data
+
+To fit models to every country efficiently, we use nested data frames, which group data by country and continent.
+
+```{r}
+by_country <- gapminder %>% 
+  group_by(country, continent) %>% 
+  nest()
+by_country
+```
+
+### List-Columns
+
+A model-fitting function is defined, and the map function is used to apply it to each country's data. The resulting models are stored as list-columns in the data frame.
+
+```{r}
+country_model <- function(df) {
+  lm(lifeExp ~ year, data = df)
+}
+
+by_country <- by_country %>% 
+  mutate(model = map(data, country_model))
+
+```
+
+### Unnesting
+
+Residuals are computed for each model-data pair, and the nested data frame is transformed into a regular data frame using unnest.
+```{r}
+by_country <- by_country %>% 
+  mutate(
+    resids = map2(data, model, add_residuals)
+  )
+by_country
+
+resids <- unnest(by_country, resids)
+resids
+
+resids %>% 
+  ggplot(aes(year, resid)) +
+    geom_line(aes(group = country), alpha = 1 / 3) + 
+    geom_smooth(se = FALSE)
+
+## by continent
+resids %>% 
+  ggplot(aes(year, resid, group = country)) +
+    geom_line(alpha = 1 / 3) + 
+    facet_wrap(~continent)
+```
+
+### Model Quality
+
+The broom package is introduced for assessing model quality. The glance function is applied to extract model quality metrics, providing insights into model performance.
+
+```{r}
+glance <- by_country %>% 
+  mutate(glance = map(model, broom::glance)) %>% 
+  unnest(glance, .drop = TRUE)
+
+glance
+
+
+glance %>% 
+  arrange(r.squared)
+
+bad_fit <- filter(glance, r.squared < 0.25)
+
+gapminder %>% 
+  semi_join(bad_fit, by = "country") %>% 
+  ggplot(aes(year, lifeExp, colour = country)) +
+    geom_line()
+```
+
+***
+On your Own
+
+1. Quadratic Polynomial Fit: Experiment with a quadratic polynomial for a better fit. Interpret the coefficients, considering a transformation for zero mean.
