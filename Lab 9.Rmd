@@ -1,0 +1,183 @@
+---
+title: "Statistical Analysis with rstatix: (Taylor's Version)"
+author: "Your Name Here"
+date: "2023-12-01"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+## Introduction
+
+Statistical analysis is a crucial aspect of data science and research. In this guide, we'll explore the functionality of the `rstatix` package, a powerful tool in the R statistical ecosystem. To illustrate its application, we'll use the `taylor` package as our example dataset, focusing on summary statistics, t-tests (independent and paired), correlation plots, and ANOVA.
+
+## Install and Load Packages
+
+Before we begin, ensure that you have the required packages installed:
+
+```{r}
+#install.packages("rstatix")
+#install.packages("taylor")
+
+library(rstatix)
+library(taylor)
+library(tidyverse)
+```
+
+# Taylor package
+The goal of {taylor} is to provide easy access to a curated data set of Taylor Swift songs, including lyrics and audio characteristics. Data comes Genius and the Spotify API.
+https://taylor.wjakethompson.com/
+
+```{r}
+data("taylor_albums")
+data("taylor_all_songs")
+```
+
+## Summary Statistics
+Summary statistics provide a quick overview of the main characteristics of a dataset. The rstatix package makes it easy to compute these statistics.
+
+```{r}
+taylor_all_songs %>% 
+  get_summary_stats(duration_ms, danceability, energy, type = "common")
+```
+
+This will display key statistics such as mean, standard deviation, and confidence intervals for the a few variables of interest in all songs, durations of the song, dancability score, and energy score.
+
+## Group By Summary
+
+You can do the same thing but group by a variable
+
+```{r}
+taylor_all_songs %>%
+  group_by(album_name) %>% 
+  get_summary_stats(duration_ms, danceability, energy, type = "mean_sd")
+```
+
+
+# T-Tests
+T-tests are used to compare means between groups. The rstatix package simplifies the process of conducting t-tests, both independent and paired.
+
+## Independent T-Test
+Whats the dancability between evermore and lover album? What about evermore and folklore?
+```{r}
+# Example: Independent t-test
+two_ind <- taylor_all_songs %>% 
+  filter(album_name == "evermore" | album_name == "Lover")
+
+ggplot(two_ind, aes(album_name, danceability)) +
+  geom_boxplot()
+
+lover_ever <- two_ind %>%
+  t_test(danceability ~ album_name, paired = FALSE)
+lover_ever
+
+
+soft_ind <- taylor_all_songs %>% 
+  filter(album_name == "evermore" | album_name == "folklore")
+
+ggplot(soft_ind, aes(album_name, danceability)) +
+  geom_boxplot()
+
+folk_ever <- soft_ind %>%
+  t_test(danceability ~ album_name, paired = FALSE)
+folk_ever
+```
+
+## Paired T-Test
+Now compare the rerecorded albums for taylors version in terms of length of time?
+
+```{r}
+## cleaning data to be paired
+
+taylors_version <- taylor_albums %>% 
+  filter(str_detect(album_name, "(Taylor's Version)")) %>% 
+  pull(album_name)
+## 4 taylor albumns
+old_version <- str_remove_all(taylors_version, " \\(Taylor's Version\\)")
+
+grouped <- taylor_all_songs %>% 
+  filter(album_name %in% c(taylors_version, old_version)) %>%
+  mutate(taylor_version = ifelse(str_detect(album_name,"(Taylor's Version)"), 1, 0)) %>% 
+  select(duration_ms, track_name, taylor_version, album_name) %>% 
+  filter(!str_detect(track_name, "From The Vault|Remix|Acoustic Version|Original Demo Recording|Piano Version")) %>%
+  mutate(track_name = str_remove_all(track_name, " \\(Taylor's Version\\)"),
+         album_name = str_remove_all(album_name, " \\(Taylor's Version\\)")) %>% 
+  pivot_wider(id_cols = c(track_name, album_name), names_from = taylor_version, values_from = duration_ms) %>% 
+  filter(!is.na(`0`) & !is.na(`1`)) %>% 
+  rowid_to_column(var = "id") %>% 
+  pivot_longer(cols = c(`0`,`1`), names_to = "taylors_vers",
+               values_to = "duration")
+
+# create plot using ggplot() and geom_boxplot() functions 
+ggplot(grouped, aes(taylors_vers, duration, fill=taylors_vers)) + 
+geom_boxplot()+ 
+# geom_point() is used to make points at data values 
+geom_point(alpha = 0.3)+ 
+# geom_line() joins the paired datapoints 
+geom_line(aes(group=id), alpha = 0.3)
+
+
+# Example: Paired t-test
+t_test_paired_result <- grouped %>%
+  t_test(duration ~ taylors_vers, paired = TRUE)
+t_test_paired_result
+```
+
+## Correlation Plots
+Correlation plots are useful for visualizing relationships between variables. The rstatix package facilitates correlation analysis.
+
+```{r}
+# Example: Correlation plot
+music_scores <- taylor_all_songs %>%
+  select(danceability, energy, speechiness, acousticness, liveness)
+
+correlation_matrix <- music_scores %>%
+  cor_mat()
+correlation_matrix
+correlation_matrix %>%
+  cor_mark_significant()
+# Visualize correlation matrix
+correlation_matrix %>%
+  cor_plot()
+
+```
+
+This will generate a visual representation of the correlation matrix, making it easier to identify patterns and relationships, like energy and accousticness being negatively correlated.
+
+# Analysis of Variance (ANOVA)
+ANOVA is employed to compare means between two or more groups. The rstatix package supports one-way and two-way ANOVA.
+
+## One-Way ANOVA
+
+```{r}
+# Example: One-way ANOVA
+grouped %>%
+  anova_test(duration ~ taylors_vers)
+
+```
+
+The anova_result object will contain the ANOVA table with F-statistics and p-values.
+
+Two-Way ANOVA
+
+```{r}
+ggplot(grouped, aes(taylors_vers, duration)) +
+  geom_boxplot() +
+  geom_line(aes(group = id), alpha = 0.3) +
+  facet_wrap(~album_name)
+
+# Example: Two-way ANOVA
+grouped %>%
+  anova_test(duration ~ taylors_vers + album_name)
+
+
+```
+
+
+
+# Conclusion
+The rstatix package streamlines statistical analysis in R, providing a convenient and tidy approach. Through examples with the taylor dataset, we've covered summary statistics, t-tests, correlation plots, and ANOVA. These tools empower researchers and data scientists to derive meaningful insights from their data.
+
+On your own...
+
+Can you run anovas or t-tests on different keys of the song and their dancability or energy? Or speechiness/liveness on if the song is explicit or not?
